@@ -280,11 +280,11 @@ func (c *Client) readOKLine(terminator string) (err error) {
 	return textproto.ProtocolError("unexpected response: " + line)
 }
 
-func (c *Client) idle(subsystems ...string) ([]string, error) {
+func (c *Client) Idle(subsystems ...string) ([]string, error) {
 	return c.Command("idle %s", Quoted(strings.Join(subsystems, " "))).Strings("changed")
 }
 
-func (c *Client) noIdle() (err error) {
+func (c *Client) NoIdle() (err error) {
 	id, err := c.cmd("noidle")
 	if err == nil {
 		c.text.StartResponse(id)

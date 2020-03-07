@@ -43,7 +43,7 @@ func (w *Watcher) watch(names ...string) {
 	// We can block in two places: idle and sending on Event/Error channels.
 	// We need to check w.exit and w.names after each.
 	for {
-		changed, err := w.conn.idle(names...)
+		changed, err := w.conn.Idle(names...)
 		select {
 		case <-w.exit:
 			// If Close interrupted idle with a noidle, and we don't
@@ -103,14 +103,14 @@ func (w *Watcher) consume() {
 func (w *Watcher) Subsystems(names ...string) {
 	w.names <- names
 	w.consume()
-	w.conn.noIdle()
+	w.conn.NoIdle()
 }
 
 // Close closes Event and Error channels, and the connection to MPD server.
 func (w *Watcher) Close() error {
 	w.exit <- true
 	w.consume()
-	w.conn.noIdle()
+	w.conn.NoIdle()
 
 	<-w.done // wait for idle to finish and channels to close
 	// At this point, watch goroutine has ended,
